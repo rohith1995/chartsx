@@ -1,0 +1,16 @@
+prometheus-redis-exporter:
+  redisAddress: redis://172.17.0.8:6379
+  auth:
+    enabled: true
+    redisPassword: LCSqRWVmgZ
+  serviceMonitor:
+    enabled: true
+    labels:
+      release: exporter-bootstrap
+kube-prometheus-stack:
+  prometheus:
+    service:
+      type: NodePort
+    prometheusSpec:
+      serviceMonitorSelectorNilUsesHelmValues: false
+      podMonitorSelectorNilUsesHelmValues: false
