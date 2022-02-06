@@ -11,6 +11,17 @@ entries:
     urls:
     - https://github.com/rohith1995/chartsx/releases/download/exporter-bootstrap-0.1.0/exporter-bootstrap-0.1.0.tgz
     version: 0.1.0
+  k8s-sidecar:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2022-02-06T18:21:18.783413105Z"
+    description: A Helm chart for Kubernetes
+    digest: cf630a60c5d9a2018c2429b977468289eb9df493b9048f7109b1c06bb9be364e
+    name: k8s-sidecar
+    type: application
+    urls:
+    - https://github.com/rohith1995/chartsx/releases/download/k8s-sidecar-0.1.0/k8s-sidecar-0.1.0.tgz
+    version: 0.1.0
   k8s-sidecar-cos:
   - apiVersion: v2
     appVersion: 1.0.0
@@ -22,4 +33,4 @@ entries:
     urls:
     - https://github.com/rohith1995/chartsx/releases/download/k8s-sidecar-cos-0.1.0/k8s-sidecar-cos-0.1.0.tgz
     version: 0.1.0
-generated: "2022-02-06T18:17:22.181945105Z"
+generated: "2022-02-06T18:21:18.783418405Z"
