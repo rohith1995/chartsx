@@ -1,36 +1,3 @@
-redis-exporter-1:
-  redisAddress: redis://172.17.0.11:6379
-  auth:
-    enabled: true
-    redisPassword: kPmqgl2yMm
-  serviceMonitor:
-    enabled: true
-redis-exporter-2:
-  redisAddress: redis://172.17.0.12:6389
-  auth:
-    enabled: true
-    redisPassword: 8cUUfUKCPf
-  serviceMonitor:
-    enabled: true
-prometheus-postgres-exporter:
-  config:
-    datasourceSecret:
-      name: pg-connection
-      key: connectionString
-  serviceMonitor:
-    enabled: true
-kube-prometheus-stack:
-  prometheus:
-    service:
-      type: NodePort
-    prometheusSpec:
-      serviceMonitorSelectorNilUsesHelmValues: false
-      podMonitorSelectorNilUsesHelmValues: false
-  prometheusOperator:
-    tls:
-      enabled: false
-    admissionWebhooks:
-      enabled: false
 k8s-sidecar:
   # Default values for k8s-sidecar.
   # This is a YAML-formatted file.
