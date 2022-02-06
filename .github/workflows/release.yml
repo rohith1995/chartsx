@@ -22,4 +22,4 @@ jobs:
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.2.1
         env:
-          CR_TOKEN: "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"
+          CR_TOKEN: "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"
