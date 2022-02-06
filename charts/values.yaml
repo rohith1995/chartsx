@@ -1,0 +1,132 @@
+redis-exporter-1:
+  redisAddress: redis://172.17.0.11:6379
+  auth:
+    enabled: true
+    redisPassword: kPmqgl2yMm
+  serviceMonitor:
+    enabled: true
+redis-exporter-2:
+  redisAddress: redis://172.17.0.12:6389
+  auth:
+    enabled: true
+    redisPassword: 8cUUfUKCPf
+  serviceMonitor:
+    enabled: true
+prometheus-postgres-exporter:
+  config:
+    datasourceSecret:
+      name: pg-connection
+      key: connectionString
+  serviceMonitor:
+    enabled: true
+kube-prometheus-stack:
+  prometheus:
+    service:
+      type: NodePort
+    prometheusSpec:
+      serviceMonitorSelectorNilUsesHelmValues: false
+      podMonitorSelectorNilUsesHelmValues: false
+  prometheusOperator:
+    tls:
+      enabled: false
+    admissionWebhooks:
+      enabled: false
+k8s-sidecar:
+  # Default values for k8s-sidecar.
+  # This is a YAML-formatted file.
+  # Declare variables to be passed into your templates.
+  # ADDED BY FLORIN
+  folderId: 0
+  folderUid: "l3KqBxCMz"
+  #### UNTIL HERE
+  replicaCount: 1
+  image:
+    repository: kiwigrid/k8s-sidecar
+    pullPolicy: IfNotPresent
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: "1.15.0"
+  imagePullSecrets: []
+  nameOverride: ""
+  fullnameOverride: ""
+  serviceAccount:
+    # Specifies whether a service account should be created
+    create: true
+    # Annotations to add to the service account
+    annotations: {}
+    # The name of the service account to use.
+    # If not set and create is true, a name is generated using the fullname template
+    name: ""
+  podAnnotations: {}
+  podSecurityContext: {}
+    # fsGroup: 2000
+  securityContext: {}
+    # capabilities:
+    #   drop:
+    #   - ALL
+    # readOnlyRootFilesystem: true
+    # runAsNonRoot: true
+    # runAsUser: 1000
+  service:
+    type: ClusterIP
+    port: 80
+  ingress:
+    enabled: false
+    className: ""
+    annotations: {}
+      # kubernetes.io/ingress.class: nginx
+      # kubernetes.io/tls-acme: "true"
+    hosts:
+      - host: chart-example.local
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+    tls: []
+    #  - secretName: chart-example-tls
+    #    hosts:
+    #      - chart-example.local
+  resources: {}
+    # We usually recommend not to specify default resources and to leave this as a conscious
+    # choice for the user. This also increases chances charts run on environments with little
+    # resources, such as Minikube. If you do want to specify resources, uncomment the following
+    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+    # targetMemoryUtilizationPercentage: 80
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  sidecar:
+    dashboards:
+      enabled: true
+      label: grafana_dashboard
+      ## Annotations for Grafana dashboard configmaps
+      ##
+      annotations: {}
+      multicluster:
+        global:
+          enabled: false
+        etcd:
+          enabled: false
+      provider:
+        allowUiUpdates: false
+    datasources:
+      enabled: true
+      defaultDatasourceEnabled: true
+      createPrometheusReplicasDatasources: false
+      label: grafana_datasource
+    env:
+      label: grafana_dashboard
+      folder: /tmp
+      reqMethod: POST
+      reqUsername: admin
+      reqPassword: prom-operator
+      reqUrl: http://172.17.0.20:3000
