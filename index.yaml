@@ -33,4 +33,15 @@ entries:
     urls:
     - https://github.com/rohith1995/chartsx/releases/download/k8s-sidecar-cos-0.1.0/k8s-sidecar-cos-0.1.0.tgz
     version: 0.1.0
-generated: "2022-02-06T18:21:18.783418405Z"
+  k8s-sidecar-prometheus-exporters:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2022-02-07T09:14:56.206295805Z"
+    description: A Helm chart for Kubernetes
+    digest: 3831e50b92c152a7beecfb1382594965009379c04c6922c1b393f413a1044b51
+    name: k8s-sidecar-prometheus-exporters
+    type: application
+    urls:
+    - https://github.com/rohith1995/chartsx/releases/download/k8s-sidecar-prometheus-exporters-0.1.0/k8s-sidecar-prometheus-exporters-0.1.0.tgz
+    version: 0.1.0
+generated: "2022-02-07T09:14:56.206301205Z"
