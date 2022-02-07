@@ -1,0 +1,87 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "k8s-sidecar.fullname" . }}
+  labels:
+    {{- include "k8s-sidecar.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "k8s-sidecar.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        {{- range $path, $fileContents := .Files.Glob "dashboards/*.json" }}
+        {{- $dashboardName := regexReplaceAll "(^.*/)(.*)\\.json$" $path "${2}" }}
+        # checksum/config-{{- $dashboardName }}: {{ $.Files.Get $path | sha256sum }}
+        {{- end }}
+        florin: test
+      labels:
+        {{- include "k8s-sidecar.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "k8s-sidecar.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      hostAliases:
+      - ip: "185.199.111.133"
+        hostnames:
+        - "raw.githubusercontent.com"
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: LABEL
+              value: {{ .Values.sidecar.env.label }}
+            - name: FOLDER
+              value: {{ .Values.sidecar.env.folder }}
+            - name: REQ_METHOD
+              value: {{ .Values.sidecar.env.reqMethod }}
+            - name: REQ_USERNAME
+              value: {{ .Values.sidecar.env.reqUsername }}
+            - name: REQ_PASSWORD
+              value: {{ .Values.sidecar.env.reqPassword }}
+            - name: REQ_URL
+              value: {{ .Values.sidecar.env.reqUrl }}
+          volumeMounts:
+          - name: resources
+            mountPath: /app/resources.py
+            subPath: resources.py
+          # ports:
+          #   - name: http
+          #     containerPort: 80
+          #     protocol: TCP
+          # livenessProbe:
+          #   httpGet:
+          #     path: /
+          #     port: http
+          # readinessProbe:
+          #   httpGet:
+          #     path: /
+          #     port: http
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+        - name: resources
+          configMap:
+            name: resources
